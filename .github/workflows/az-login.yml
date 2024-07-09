@@ -36,11 +36,11 @@ jobs:
         shell: pwsh
         run: |
             Infrastructure/local/parameters-input.ps1
-      - name: Commit changes
-        run: |
-          git add .
-          git commit -m "Update Bicep parameters"
-          git push
+      #- name: Commit changes
+       # run: |
+        #  git add .
+         # git commit -m "Update Bicep parameters"
+          #git push
 
       - name: Deploy modules
         run: |

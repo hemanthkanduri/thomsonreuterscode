@@ -1,0 +1,53 @@
+name: Az-Login 
+
+on: 
+  workflow_dispatch:
+    
+     inputs:
+          modulesToDeploy:
+            description: "Select modules to deploy"
+            required: true
+            type: choice
+            options:
+              - containerregistry
+              - aks
+              - keyvault
+              - pssql
+                 
+   
+jobs:
+  ACR-Deployment:
+    runs-on: ubuntu-latest   
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+      - name: Set up Git
+        run: |
+          git config --global user.email "Ram.sundar@thomsonreuters.com"
+          git config --global user.name "RamsundarTR"
+          
+      #login to Azure 
+      - name: Login to Azure
+        uses: azure/login@v1
+        with: 
+          creds: ${{ secrets.AZURE_SANDBOX_CREDENTIALS }}
+          
+      - name: run powershell
+        shell: pwsh
+        run: |
+            Infrastructure/local/parameters-input.ps1
+      - name: Commit changes
+        run: |
+          git add .
+          git commit -m "Update Bicep parameters"
+          git push
+
+      - name: Deploy modules
+        run: |
+          for module in ${github.event.inputs.modulesToDeploy}; do
+            az deployment group create \
+              --resource-group akkadia-RG \
+              --template-file ./Infrastructure/local/local-deployment.bicep \
+              --parameters ./Infrastructure/local/local-deployment.bicepparam
+          done   
+          

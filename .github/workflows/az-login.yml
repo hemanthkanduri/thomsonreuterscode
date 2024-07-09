@@ -1,4 +1,4 @@
-name: Az-Login 
+name: local-az-login 
 
 on: 
   workflow_dispatch:

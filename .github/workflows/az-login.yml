@@ -5,14 +5,14 @@ on:
     
      inputs:
           modulesToDeploy:
-            description: "Select modules to deploy"
+            description: "Select the environment to deploy"
             required: true
             type: choice
             options:
-              - containerregistry
-              - aks
-              - keyvault
-              - pssql
+              - dev
+              - prod
+              - uat
+            
                  
    
 jobs:
